@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wound Healing Prediction</title>
+    <!-- Embedded CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="reset"] {
+            background-color: #6c757d;
+        }
+
+        button[type="reset"]:hover {
+            background-color: #5a6268;
+        }
+
+        h2 {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007bff;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Wound Healing Prediction</h1>
+        <form id="predictionForm" action="/predict" method="POST">
+            <label for="pH">pH:</label>
+            <input type="number" step="0.01" id="pH" name="pH" placeholder="e.g., 7.2" 
+                   value="{{ pH if pH else '' }}" required>
+
+            <label for="pH_trend">pH Trend:</label>
+            <input type="number" step="0.01" id="pH_trend" name="pH_trend" placeholder="e.g., 0.1" 
+                   value="{{ pH_trend if pH_trend else '' }}" required>
+
+            <label for="pH_variability">pH Variability:</label>
+            <input type="number" step="0.01" id="pH_variability" name="pH_variability" placeholder="e.g., 0.05" 
+                   value="{{ pH_variability if pH_variability else '' }}" required>
+
+            <button type="submit">Predict</button>
+            <button type="button" id="resetButton">Reset</button> <!-- Changed type to "button" -->
+        </form>
+
+        {% if prediction_text %}
+            <h2 id="predictionText">{{ prediction_text }}</h2>
+        {% endif %}
+
+        {% if error_message %}
+            <h2 style="color: red;">{{ error_message }}</h2>
+        {% endif %}
+    </div>
+
+    <!-- JavaScript to handle reset functionality -->
+    <script>
+        document.getElementById('resetButton').addEventListener('click', function() {
+            // Clear the input fields
+            document.getElementById('pH').value = '';
+            document.getElementById('pH_trend').value = '';
+            document.getElementById('pH_variability').value = '';
+
+            // Clear the prediction text
+            const predictionText = document.getElementById('predictionText');
+            if (predictionText) {
+                predictionText.remove();
+            }
+
+            // Clear the error message (if any)
+            const errorMessage = document.querySelector('h2[style="color: red;"]');
+            if (errorMessage) {
+                errorMessage.remove();
+            }
+        });
+    </script>
+</body>
+</html>
